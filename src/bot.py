@@ -30,7 +30,6 @@ def bot():
     incoming_msg = request.values.get('Body', '').lower()
     resp = MessagingResponse()
     msg = resp.message()
-    responded = False
 
     if incoming_msg != '':
         ### code to generte text
