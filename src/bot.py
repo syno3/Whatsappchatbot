@@ -1,10 +1,30 @@
-from flask import Flask, request
-import requests
-from twilio.twiml.messaging_response import MessagingResponse
+### we import required modules
+try:
+    from flask import Flask, request
+    import requests
+    from twilio.twiml.messaging_response import MessagingResponse
+    import openai
+    import logging
+    import time
+    import json
+## checking for errors
+except ImportError:
+    logging.warning('please run pip install -r requirements.txt')
 
 app = Flask(__name__)
 
+## loading the openai key
+with open('OPENAI_API_KEY.json') as f:
+    data = json.load(f)
 
+openai.api_key = data["OPENAI_API_KEY"]
+### testing if the API key works
+try: 
+    response = openai.Completion.create(engine="davinci", prompt="This is a test", max_tokens=5)
+except Exception as e:
+    print(e)
+
+## initializing the flask app
 @app.route('/bot', methods=['POST'])
 def bot():
     incoming_msg = request.values.get('Body', '').lower()
