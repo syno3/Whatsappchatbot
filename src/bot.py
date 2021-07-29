@@ -31,22 +31,29 @@ def bot():
     resp = MessagingResponse()
     msg = resp.message()
     responded = False
-    if 'quote' in incoming_msg:
-        # return a quote
-        r = requests.get('https://api.quotable.io/random')
-        if r.status_code == 200:
-            data = r.json()
-            quote = f'{data["content"]} ({data["author"]})'
-        else:
-            quote = 'I could not retrieve a quote at this time, sorry.'
-        msg.body(quote)
+
+    if not incoming_msg:
         responded = True
-    if 'cat' in incoming_msg:
-        # return a cat pic
-        msg.media('https://cataas.com/cat')
-        responded = True
-    if not responded:
-        msg.body('I only know about famous quotes and cats, sorry!')
+        if responded:
+            ### code to generte text
+            response = openai.Completion.create(
+            engine="davinci",
+            prompt= str(incoming_msg),
+            temperature=0.9,
+            max_tokens=150,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0.6
+            ##stop=["\n", " Human:", " AI:"]
+            )
+
+            response_message = response.choices[0].text
+            msg.body(response_message)
+
+    else:
+        error = 'please send me a text'
+        msg.body(error)
+
     return str(resp)
 
 
