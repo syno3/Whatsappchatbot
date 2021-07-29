@@ -32,24 +32,21 @@ def bot():
     msg = resp.message()
     responded = False
 
-    if not incoming_msg:
-        responded = True
-        if responded:
-            ### code to generte text
-            response = openai.Completion.create(
-            engine="davinci",
-            prompt= str(incoming_msg),
-            temperature=0.9,
-            max_tokens=150,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0.6
-            ##stop=["\n", " Human:", " AI:"]
-            )
+    if incoming_msg != '':
+        ### code to generte text
+        response = openai.Completion.create(
+        engine="davinci",
+        prompt= str(incoming_msg),
+        temperature=0.9,
+        max_tokens=150,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0.6
+        ##stop=["\n", " Human:", " AI:"]
+        )
 
-            response_message = response.choices[0].text
-            msg.body(response_message)
-
+        response_message = response.choices[0].text
+        msg.body(response_message)
     else:
         error = 'please send me a text'
         msg.body(error)
